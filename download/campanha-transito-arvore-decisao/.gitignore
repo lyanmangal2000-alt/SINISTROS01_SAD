@@ -1,0 +1,30 @@
+# Dados brutos — 21 MB, baixar manualmente da PRF (ver README.md)
+datatran2025.csv
+datatran2024.csv
+datatran*.csv
+
+# Saídas geradas pelo main.py
+outputs/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
