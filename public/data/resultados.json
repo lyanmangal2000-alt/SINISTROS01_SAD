@@ -1,0 +1,900 @@
+{
+  "meta": {
+    "n_registros": 72528,
+    "n_features": 20,
+    "n_train": 50769,
+    "n_test": 21759,
+    "target": "classificacao_acidente",
+    "classes": [
+      "Com Vítimas Fatais",
+      "Com Vítimas Feridas",
+      "Sem Vítimas"
+    ],
+    "random_state": 42,
+    "test_size": 0.3,
+    "hiperparams": {
+      "criterion": "entropy",
+      "max_depth": 8,
+      "min_samples_leaf": 30,
+      "class_weight": "balanced"
+    },
+    "leakage_cols": [
+      "pessoas",
+      "mortos",
+      "feridos_leves",
+      "feridos_graves",
+      "ilesos",
+      "ignorados",
+      "feridos"
+    ],
+    "modelo_depth_real": 8,
+    "modelo_n_leaves": 98,
+    "arvore_png": "outputs/arvore_decisao.png",
+    "matriz_png": "outputs/matriz_confusao.png",
+    "importancia_png": "outputs/importancia_atributos.png"
+  },
+  "kpis": {
+    "baseline_acc": 0.7746219954961165,
+    "model_acc_train": 0.4199413027634974,
+    "model_acc_test": 0.40989935199227906,
+    "gap_overfit": 0.010041950771218333,
+    "lift_acc_vs_baseline": -0.3647226435038375,
+    "recall_fatais": 0.7517594369801663,
+    "recall_feridos": 0.34826460990803915,
+    "recall_sem_vitimas": 0.5609099072134092,
+    "precision_fatais": 0.21152115211521152,
+    "f1_fatais": 0.3301489182354594,
+    "baseline_recall_fatais": 0.0,
+    "lift_recall_fatais": 0.7517594369801663,
+    "taxa_global_fatais": 0.07182053827487316
+  },
+  "matriz_confusao": {
+    "labels": [
+      "Com Vítimas Fatais",
+      "Com Vítimas Feridas",
+      "Sem Vítimas"
+    ],
+    "short_labels": [
+      "Fatais",
+      "Feridas",
+      "Sem Vit"
+    ],
+    "normalized": [
+      [
+        0.7517594369801663,
+        0.09404990403071017,
+        0.15419065898912349
+      ],
+      [
+        0.23239394838326907,
+        0.34826460990803915,
+        0.4193414417086918
+      ],
+      [
+        0.13858126309488178,
+        0.30050882969170906,
+        0.5609099072134092
+      ]
+    ],
+    "counts": [
+      [
+        1175,
+        147,
+        241
+      ],
+      [
+        3917,
+        5870,
+        7068
+      ],
+      [
+        463,
+        1004,
+        1874
+      ]
+    ],
+    "support": [
+      1563,
+      16855,
+      3341
+    ]
+  },
+  "classification_report": {
+    "por_classe": [
+      {
+        "classe": "Com Vítimas Fatais",
+        "precision": 0.21152115211521152,
+        "recall": 0.7517594369801663,
+        "f1": 0.3301489182354594,
+        "support": 1563
+      },
+      {
+        "classe": "Com Vítimas Feridas",
+        "precision": 0.836063238854864,
+        "recall": 0.34826460990803915,
+        "f1": 0.49170715362707323,
+        "support": 16855
+      },
+      {
+        "classe": "Sem Vítimas",
+        "precision": 0.20407274311227266,
+        "recall": 0.5609099072134092,
+        "f1": 0.29926541041200894,
+        "support": 3341
+      }
+    ],
+    "macro_avg": {
+      "precision": 0.417219044694116,
+      "recall": 0.5536446513672049,
+      "f1-score": 0.37370716075818056,
+      "support": 21759.0
+    },
+    "weighted_avg": {
+      "precision": 0.6941615187459401,
+      "recall": 0.40989935199227906,
+      "f1-score": 0.45055345235410016,
+      "support": 21759.0
+    }
+  },
+  "hiperparametros": [
+    {
+      "max_depth": 6,
+      "min_samples_leaf": 20,
+      "acc_train": 0.4998522720557821,
+      "acc_test": 0.49289948986626225,
+      "gap_overfit": 0.006952782189519835
+    },
+    {
+      "max_depth": 6,
+      "min_samples_leaf": 30,
+      "acc_train": 0.500502275010341,
+      "acc_test": 0.49326715382140723,
+      "gap_overfit": 0.007235121188933713
+    },
+    {
+      "max_depth": 6,
+      "min_samples_leaf": 50,
+      "acc_train": 0.5008765191356931,
+      "acc_test": 0.4938186497541247,
+      "gap_overfit": 0.007057869381568382
+    },
+    {
+      "max_depth": 8,
+      "min_samples_leaf": 20,
+      "acc_train": 0.42171403809411256,
+      "acc_test": 0.41192150374557657,
+      "gap_overfit": 0.009792534348535997
+    },
+    {
+      "max_depth": 8,
+      "min_samples_leaf": 30,
+      "acc_train": 0.4199413027634974,
+      "acc_test": 0.40989935199227906,
+      "gap_overfit": 0.010041950771218333
+    },
+    {
+      "max_depth": 8,
+      "min_samples_leaf": 50,
+      "acc_train": 0.4223640410486714,
+      "acc_test": 0.41320832758858406,
+      "gap_overfit": 0.009155713460087367
+    },
+    {
+      "max_depth": 10,
+      "min_samples_leaf": 20,
+      "acc_train": 0.48442947467943037,
+      "acc_test": 0.469231122753803,
+      "gap_overfit": 0.015198351925627351
+    },
+    {
+      "max_depth": 10,
+      "min_samples_leaf": 30,
+      "acc_train": 0.48307037759262544,
+      "acc_test": 0.4696907026977343,
+      "gap_overfit": 0.01337967489489117
+    },
+    {
+      "max_depth": 10,
+      "min_samples_leaf": 50,
+      "acc_train": 0.48415371585022354,
+      "acc_test": 0.47322946826600487,
+      "gap_overfit": 0.010924247584218671
+    }
+  ],
+  "importancias_top20": [
+    {
+      "feature": "veiculos",
+      "importance": 0.728875327347135,
+      "col_orig": "veiculos",
+      "valor": null
+    },
+    {
+      "feature": "tipo_pista_Simples",
+      "importance": 0.08835630965578123,
+      "col_orig": "tipo_pista",
+      "valor": "Simples"
+    },
+    {
+      "feature": "fase_dia_Plena Noite",
+      "importance": 0.036171706251857984,
+      "col_orig": "fase_dia",
+      "valor": "Plena Noite"
+    },
+    {
+      "feature": "fase_dia_Anoitecer",
+      "importance": 0.0294605709063641,
+      "col_orig": "fase_dia",
+      "valor": "Anoitecer"
+    },
+    {
+      "feature": "fase_dia_Madrugada",
+      "importance": 0.02710303415549448,
+      "col_orig": "fase_dia",
+      "valor": "Madrugada"
+    },
+    {
+      "feature": "causa_acidente_Ingestão de álcool",
+      "importance": 0.025343490780359766,
+      "col_orig": "causa_acidente",
+      "valor": "Ingestão de álcool"
+    },
+    {
+      "feature": "causa_acidente_Velocidade incompatível",
+      "importance": 0.023443111892471526,
+      "col_orig": "causa_acidente",
+      "valor": "Velocidade incompatível"
+    },
+    {
+      "feature": "condicao_metereologica_Neblina",
+      "importance": 0.008965343197812227,
+      "col_orig": "condicao_metereologica",
+      "valor": "Neblina"
+    },
+    {
+      "feature": "condicao_metereologica_Garoa",
+      "importance": 0.0066924842987104586,
+      "col_orig": "condicao_metereologica",
+      "valor": "Garoa"
+    },
+    {
+      "feature": "condicao_metereologica_Chuva",
+      "importance": 0.004447168805509991,
+      "col_orig": "condicao_metereologica",
+      "valor": "Chuva"
+    },
+    {
+      "feature": "hora_int",
+      "importance": 0.003946341296087873,
+      "col_orig": "hora_int",
+      "valor": null
+    },
+    {
+      "feature": "tracado__Aclive",
+      "importance": 0.0017215656569133221,
+      "col_orig": "tracado_via",
+      "valor": "Aclive"
+    },
+    {
+      "feature": "condicao_metereologica_Céu Claro",
+      "importance": 0.001460833552284077,
+      "col_orig": "condicao_metereologica",
+      "valor": "Céu Claro"
+    },
+    {
+      "feature": "sentido_via_Decrescente",
+      "importance": 0.0010276417700776101,
+      "col_orig": "sentido_via",
+      "valor": "Decrescente"
+    },
+    {
+      "feature": "causa_acidente_Defeito mecânico no veículo",
+      "importance": 0.0010069104626413792,
+      "col_orig": "causa_acidente",
+      "valor": "Defeito mecânico no veículo"
+    },
+    {
+      "feature": "tracado__Divergência",
+      "importance": 0.0008603186562926753,
+      "col_orig": "tracado_via",
+      "valor": "Divergência"
+    },
+    {
+      "feature": "tipo_acidente_Saída de leito carroçável",
+      "importance": 0.0008591746879977767,
+      "col_orig": "tipo_acidente",
+      "valor": "Saída de leito carroçável"
+    },
+    {
+      "feature": "tracado__Curva",
+      "importance": 0.000857997485181853,
+      "col_orig": "tracado_via",
+      "valor": "Curva"
+    },
+    {
+      "feature": "mes_mes_9",
+      "importance": 0.0008359958947276874,
+      "col_orig": "mes",
+      "valor": "mes_9"
+    },
+    {
+      "feature": "tracado__Túnel",
+      "importance": 0.000707607693141978,
+      "col_orig": "tracado_via",
+      "valor": "Túnel"
+    }
+  ],
+  "recomendacoes_top10": [
+    {
+      "rank": 1,
+      "feature": "veiculos",
+      "col_orig": "veiculos",
+      "valor": "alto (≥ 2.9)",
+      "importancia": 0.728875327347135,
+      "n_casos": 26089,
+      "pct_total": 35.97093536289433,
+      "pct_fatais_grupo": 13.461612173713059,
+      "lift_fatais": 1.8743401953063172,
+      "campanha": {
+        "tipo": "Condução segura com múltiplos veículos",
+        "publico": "Condutores jovens e idosos",
+        "momento": "Horários de pico",
+        "canal": "Campanhas audiovisuais, autoescolas"
+      }
+    },
+    {
+      "rank": 2,
+      "feature": "tipo_pista_Simples",
+      "col_orig": "tipo_pista",
+      "valor": "Simples",
+      "importancia": 0.08835630965578123,
+      "n_casos": 38898,
+      "pct_total": 53.63170086035738,
+      "pct_fatais_grupo": 9.476065607486246,
+      "lift_fatais": 1.3194088815123104,
+      "campanha": {
+        "tipo": "Cuidados em pista simples",
+        "publico": "Condutores em rodovias rurais",
+        "momento": "Período diurno",
+        "canal": "Sinalização, faixas educativas"
+      }
+    },
+    {
+      "rank": 3,
+      "feature": "fase_dia_Plena Noite",
+      "col_orig": "fase_dia",
+      "valor": "Plena Noite",
+      "importancia": 0.036171706251857984,
+      "n_casos": 6258,
+      "pct_total": 8.62839179351423,
+      "pct_fatais_grupo": 13.40683924576542,
+      "lift_fatais": 1.8667138353174781,
+      "campanha": {
+        "tipo": "Direção noturna defensiva",
+        "publico": "Condutores em deslocamentos noturnos",
+        "momento": "Noite e madrugada",
+        "canal": "Faróis regulados, sinalização refletiva"
+      }
+    },
+    {
+      "rank": 4,
+      "feature": "fase_dia_Anoitecer",
+      "col_orig": "fase_dia",
+      "valor": "Anoitecer",
+      "importancia": 0.0294605709063641,
+      "n_casos": 6366,
+      "pct_total": 8.77729980145599,
+      "pct_fatais_grupo": 13.603518693056865,
+      "lift_fatais": 1.8940986826070807,
+      "campanha": {
+        "tipo": "Direção noturna defensiva",
+        "publico": "Condutores em deslocamentos noturnos",
+        "momento": "Noite e madrugada",
+        "canal": "Faróis regulados, sinalização refletiva"
+      }
+    },
+    {
+      "rank": 5,
+      "feature": "fase_dia_Madrugada",
+      "col_orig": "fase_dia",
+      "valor": "Madrugada",
+      "importancia": 0.02710303415549448,
+      "n_casos": 6373,
+      "pct_total": 8.786951246415176,
+      "pct_fatais_grupo": 14.655578220618235,
+      "lift_fatais": 2.040583177548472,
+      "campanha": {
+        "tipo": "Combate à fadiga e direção sonolenta",
+        "publico": "Motoristas profissionais e jovens",
+        "momento": "Madrugada",
+        "canal": "Paradas educativas, café, aplicativos"
+      }
+    },
+    {
+      "rank": 6,
+      "feature": "causa_acidente_Ingestão de álcool",
+      "col_orig": "causa_acidente",
+      "valor": "Ingestão de álcool",
+      "importancia": 0.025343490780359766,
+      "n_casos": 15138,
+      "pct_total": 20.871939113170086,
+      "pct_fatais_grupo": 10.53639846743295,
+      "lift_fatais": 1.4670453216471049,
+      "campanha": {
+        "tipo": "Prevenção de direção embriagada",
+        "publico": "Condutores jovens 18-34, saidas noturnas",
+        "momento": "Noite e madrugada, fins de semana",
+        "canal": "Blitz educativas, rádio, redes sociais"
+      }
+    },
+    {
+      "rank": 7,
+      "feature": "causa_acidente_Velocidade incompatível",
+      "col_orig": "causa_acidente",
+      "valor": "Velocidade incompatível",
+      "importancia": 0.023443111892471526,
+      "n_casos": 15548,
+      "pct_total": 21.43723803220825,
+      "pct_fatais_grupo": 10.110625160792384,
+      "lift_fatais": 1.4077623760068152,
+      "campanha": {
+        "tipo": "Controle de velocidade",
+        "publico": "Condutores em rodovias de pista simples",
+        "momento": "Período diurno, trechos de curva",
+        "canal": "Radares educativos, sinalização, painéis eletrônicos"
+      }
+    },
+    {
+      "rank": 8,
+      "feature": "condicao_metereologica_Neblina",
+      "col_orig": "condicao_metereologica",
+      "valor": "Neblina",
+      "importancia": 0.008965343197812227,
+      "n_casos": 5047,
+      "pct_total": 6.958691815574674,
+      "pct_fatais_grupo": 14.563106796116504,
+      "lift_fatais": 2.0277078320382755,
+      "campanha": {
+        "tipo": "Direção em neblina",
+        "publico": "Condutores em trechos de serra",
+        "momento": "Madrugada e início da manhã",
+        "canal": "Sinalização luminosa, rádio, alertas no painel"
+      }
+    },
+    {
+      "rank": 9,
+      "feature": "condicao_metereologica_Garoa",
+      "col_orig": "condicao_metereologica",
+      "valor": "Garoa",
+      "importancia": 0.0066924842987104586,
+      "n_casos": 5085,
+      "pct_total": 7.011085373924553,
+      "pct_fatais_grupo": 13.805309734513274,
+      "lift_fatais": 1.9221952475038946,
+      "campanha": {
+        "tipo": "Direção defensiva em chuva",
+        "publico": "Todos os condutores, especialmente motociclistas",
+        "momento": "Período chuvoso, estações de transição",
+        "canal": "Previsão do tempo, rádio, redes sociais"
+      }
+    },
+    {
+      "rank": 10,
+      "feature": "condicao_metereologica_Chuva",
+      "col_orig": "condicao_metereologica",
+      "valor": "Chuva",
+      "importancia": 0.004447168805509991,
+      "n_casos": 5055,
+      "pct_total": 6.969722038385176,
+      "pct_fatais_grupo": 13.550939663699307,
+      "lift_fatais": 1.8867777921458693,
+      "campanha": {
+        "tipo": "Direção defensiva em chuva",
+        "publico": "Todos os condutores, especialmente motociclistas",
+        "momento": "Período chuvoso, estações de transição",
+        "canal": "Previsão do tempo, rádio, redes sociais"
+      }
+    }
+  ],
+  "distribuicoes": {
+    "alvo": [
+      {
+        "label": "Com Vítimas Feridas",
+        "count": 56181
+      },
+      {
+        "label": "Sem Vítimas",
+        "count": 11138
+      },
+      {
+        "label": "Com Vítimas Fatais",
+        "count": 5209
+      }
+    ],
+    "uf": [
+      {
+        "label": "BA",
+        "count": 2775
+      },
+      {
+        "label": "AM",
+        "count": 2766
+      },
+      {
+        "label": "DF",
+        "count": 2757
+      },
+      {
+        "label": "AL",
+        "count": 2732
+      },
+      {
+        "label": "RJ",
+        "count": 2725
+      },
+      {
+        "label": "MT",
+        "count": 2719
+      },
+      {
+        "label": "RR",
+        "count": 2718
+      },
+      {
+        "label": "MG",
+        "count": 2716
+      },
+      {
+        "label": "MA",
+        "count": 2707
+      },
+      {
+        "label": "SC",
+        "count": 2703
+      },
+      {
+        "label": "PA",
+        "count": 2701
+      },
+      {
+        "label": "RN",
+        "count": 2694
+      },
+      {
+        "label": "RS",
+        "count": 2691
+      },
+      {
+        "label": "MS",
+        "count": 2688
+      },
+      {
+        "label": "PI",
+        "count": 2682
+      }
+    ],
+    "mes": [
+      {
+        "label": "mes_3",
+        "count": 6205
+      },
+      {
+        "label": "mes_12",
+        "count": 6144
+      },
+      {
+        "label": "mes_6",
+        "count": 6078
+      },
+      {
+        "label": "mes_11",
+        "count": 6070
+      },
+      {
+        "label": "mes_7",
+        "count": 6050
+      },
+      {
+        "label": "mes_2",
+        "count": 6036
+      },
+      {
+        "label": "mes_1",
+        "count": 6028
+      },
+      {
+        "label": "mes_8",
+        "count": 6019
+      },
+      {
+        "label": "mes_5",
+        "count": 6005
+      },
+      {
+        "label": "mes_4",
+        "count": 5999
+      },
+      {
+        "label": "mes_9",
+        "count": 5961
+      },
+      {
+        "label": "mes_10",
+        "count": 5933
+      }
+    ],
+    "periodo_dia": [
+      {
+        "label": "Tarde",
+        "count": 18281
+      },
+      {
+        "label": "Madrugada",
+        "count": 18194
+      },
+      {
+        "label": "Noite",
+        "count": 18131
+      },
+      {
+        "label": "Manhã",
+        "count": 17922
+      }
+    ],
+    "fase_dia": [
+      {
+        "label": "Amanhecer",
+        "count": 17873
+      },
+      {
+        "label": "Pleno Dia",
+        "count": 17871
+      },
+      {
+        "label": "Tarde",
+        "count": 17787
+      },
+      {
+        "label": "Madrugada",
+        "count": 6373
+      },
+      {
+        "label": "Anoitecer",
+        "count": 6366
+      },
+      {
+        "label": "Plena Noite",
+        "count": 6258
+      }
+    ],
+    "causa_acidente": [
+      {
+        "label": "Velocidade incompatível",
+        "count": 15548
+      },
+      {
+        "label": "Ingestão de álcool",
+        "count": 15138
+      },
+      {
+        "label": "Ausência de reação do condutor",
+        "count": 8159
+      },
+      {
+        "label": "Reação tardia ou ineficiente do condutor",
+        "count": 7800
+      },
+      {
+        "label": "Não observar via ao acessá-la",
+        "count": 5149
+      },
+      {
+        "label": "Outros",
+        "count": 3443
+      },
+      {
+        "label": "Distância inadequada entre veículos",
+        "count": 3170
+      },
+      {
+        "label": "Condutor dormindo",
+        "count": 2539
+      },
+      {
+        "label": "Desobediência à sinalização",
+        "count": 2145
+      },
+      {
+        "label": "Falta de atenção do condutor",
+        "count": 2054
+      },
+      {
+        "label": "Falta de iluminação do veículo",
+        "count": 1799
+      },
+      {
+        "label": "Defeito mecânico no veículo",
+        "count": 1548
+      },
+      {
+        "label": "Pista escorregadia",
+        "count": 1423
+      },
+      {
+        "label": "Animais na pista",
+        "count": 1027
+      },
+      {
+        "label": "Objeto na pista",
+        "count": 838
+      }
+    ],
+    "tipo_acidente": [
+      {
+        "label": "Saída de leito carroçável",
+        "count": 4395
+      },
+      {
+        "label": "Choque",
+        "count": 4382
+      },
+      {
+        "label": "Colisão traseira",
+        "count": 4333
+      },
+      {
+        "label": "Engavetamento",
+        "count": 4286
+      },
+      {
+        "label": "Queda de ocupante de veículo",
+        "count": 4275
+      },
+      {
+        "label": "Incêndio",
+        "count": 4271
+      },
+      {
+        "label": "Colisão lateral mesmo sentido",
+        "count": 4269
+      },
+      {
+        "label": "Atropelo de pessoa",
+        "count": 4267
+      },
+      {
+        "label": "Eventos atípicos",
+        "count": 4249
+      },
+      {
+        "label": "Colisão transversal",
+        "count": 4246
+      },
+      {
+        "label": "Derramamento de carga",
+        "count": 4245
+      },
+      {
+        "label": "Capotamento",
+        "count": 4244
+      },
+      {
+        "label": "Colisão com objeto",
+        "count": 4238
+      },
+      {
+        "label": "Colisão frontal",
+        "count": 4234
+      },
+      {
+        "label": "Tombamento",
+        "count": 4211
+      }
+    ],
+    "condicao_metereologica": [
+      {
+        "label": "Nublado",
+        "count": 19322
+      },
+      {
+        "label": "Sol",
+        "count": 19015
+      },
+      {
+        "label": "Céu Claro",
+        "count": 19004
+      },
+      {
+        "label": "Garoa",
+        "count": 5085
+      },
+      {
+        "label": "Chuva",
+        "count": 5055
+      },
+      {
+        "label": "Neblina",
+        "count": 5047
+      }
+    ],
+    "tipo_pista": [
+      {
+        "label": "Simples",
+        "count": 38898
+      },
+      {
+        "label": "Dupla",
+        "count": 16934
+      },
+      {
+        "label": "Múltipla",
+        "count": 16696
+      }
+    ],
+    "uso_solo": [
+      {
+        "label": "Sim",
+        "count": 46842
+      },
+      {
+        "label": "Não",
+        "count": 25686
+      }
+    ],
+    "dia_semana": [
+      {
+        "label": "sábado",
+        "count": 10462
+      },
+      {
+        "label": "quinta-feira",
+        "count": 10443
+      },
+      {
+        "label": "domingo",
+        "count": 10413
+      },
+      {
+        "label": "terça-feira",
+        "count": 10335
+      },
+      {
+        "label": "segunda-feira",
+        "count": 10315
+      },
+      {
+        "label": "sexta-feira",
+        "count": 10305
+      },
+      {
+        "label": "quarta-feira",
+        "count": 10255
+      }
+    ],
+    "veiculos": [
+      {
+        "label": "0",
+        "count": 0
+      },
+      {
+        "label": "1",
+        "count": 22247
+      },
+      {
+        "label": "2",
+        "count": 24192
+      },
+      {
+        "label": "3",
+        "count": 24374
+      },
+      {
+        "label": "4",
+        "count": 1715
+      },
+      {
+        "label": "5+",
+        "count": 0
+      }
+    ]
+  }
+}

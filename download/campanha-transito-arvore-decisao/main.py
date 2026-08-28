@@ -30,6 +30,7 @@ Rodar:
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Tuple
 
@@ -50,6 +51,7 @@ from sklearn.metrics import (
     accuracy_score,
     classification_report,
     ConfusionMatrixDisplay,
+    confusion_matrix,
 )
 
 # ------------------------------------------------------------
@@ -59,6 +61,7 @@ BASE_DIR = Path(__file__).parent
 CSV_PATH = BASE_DIR / "datatran2025.csv"
 OUTPUTS_DIR = BASE_DIR / "outputs"
 RELATORIO_PATH = BASE_DIR / "relatorio_campanhas.md"
+JSON_PATH = OUTPUTS_DIR / "resultados.json"  # consumido pelo dashboard Next.js
 
 RANDOM_STATE = 42
 TEST_SIZE = 0.30
@@ -669,6 +672,245 @@ def sugerir_campanha(col_orig: str, valor) -> Tuple[str, str, str, str]:
 
 
 # ============================================================
+# EXPORTAÇÃO JSON PARA DASHBOARD
+# ============================================================
+def exportar_resultados_json(
+    *,
+    df: pd.DataFrame,
+    df_imp: pd.DataFrame,
+    modelo,
+    X_train,
+    y_train,
+    y_test,
+    y_pred,
+    metricas: dict,
+    buscar_hp: pd.DataFrame,
+    baseline,
+):
+    """Exporta `outputs/resultados.json` consumido pelo dashboard Next.js.
+
+    Conteúdo:
+      - meta: parâmetros do modelo, baseline, RANDOM_STATE
+      - kpis: acurácias, recall fatais, lift, etc
+      - matriz_confusao: 3x3 com rótulos + suporte
+      - classification_report: precision/recall/f1 por classe
+      - hiperparametros: tabela do grid 3x3
+      - importancias: top 20 features (nome, importância, col_orig, valor)
+      - recomendacoes: top 10 com lift, % fatais, casos, tipo/público/momento/canal
+      - distribuicoes: alvo, uf (top 12), mes, periodo_dia, fase_dia, causa_acidente (top 15),
+        tipo_acidente, condicao_metereologica, tipo_pista, uso_solo, dia_semana, faixas_veiculos
+      - arvore_path: caminho relativo do PNG para o dashboard embedar
+    """
+    classes_ordenadas = sorted(y_train.unique())
+    cm = confusion_matrix(y_test, y_pred, labels=classes_ordenadas, normalize="true")
+    cm_counts = confusion_matrix(y_test, y_pred, labels=classes_ordenadas)
+    support = cm_counts.sum(axis=1)
+
+    # Classification report por classe
+    report = classification_report(y_test, y_pred, output_dict=True, digits=3, zero_division=0)
+
+    # Top 10 recomendações (mesma lógica do relatório)
+    TAXA_GLOBAL_FATAIS = (df[TARGET] == "Com Vítimas Fatais").mean()
+
+    def _decod(nome):
+        if nome.startswith("tracado__"):
+            return "tracado_via", nome[len("tracado__"):]
+        for col in NOMINAL_COLS:
+            prefix = col + "_"
+            if nome.startswith(prefix) and len(nome) > len(prefix):
+                return col, nome[len(prefix):]
+        return nome, None
+
+    recomendacoes = []
+    for rank, row in df_imp.head(10).iterrows():
+        nome_attr = row["feature"]
+        col_orig, valor = _decod(nome_attr)
+        if valor is not None:
+            if col_orig == "tracado_via":
+                dummy_col = f"tracado__{valor}"
+                if dummy_col in df.columns:
+                    mask = df[dummy_col] == 1
+                else:
+                    continue
+            else:
+                mask = df[col_orig].astype(str) == valor
+        else:
+            if col_orig in df.select_dtypes(include=[np.number]).columns:
+                thr = df[col_orig].median() + df[col_orig].std()
+                mask = df[col_orig] >= thr
+                valor = f"alto (≥ {thr:.1f})"
+            else:
+                mask = pd.Series(True, index=df.index)
+                valor = "(qualquer)"
+        n_casos = int(mask.sum())
+        if n_casos == 0:
+            continue
+        taxa_grupo = float((df.loc[mask, TARGET] == "Com Vítimas Fatais").mean())
+        lift = taxa_grupo / TAXA_GLOBAL_FATAIS if TAXA_GLOBAL_FATAIS > 0 else 1.0
+        tipo, publico, momento, canal = sugerir_campanha(col_orig, valor)
+        recomendacoes.append({
+            "rank": rank + 1,
+            "feature": nome_attr,
+            "col_orig": col_orig,
+            "valor": valor,
+            "importancia": float(row["importance"]),
+            "n_casos": n_casos,
+            "pct_total": float(n_casos / len(df) * 100),
+            "pct_fatais_grupo": float(taxa_grupo * 100),
+            "lift_fatais": float(lift),
+            "campanha": {
+                "tipo": tipo,
+                "publico": publico,
+                "momento": momento,
+                "canal": canal,
+            },
+        })
+
+    # Distribuições
+    def _dist(series, top=None, dropna=True):
+        s = series.astype(str) if dropna else series
+        vc = s.value_counts(dropna=dropna)
+        if top:
+            vc = vc.head(top)
+        return [{"label": str(k), "count": int(v)} for k, v in vc.items()]
+
+    dist_alvo = _dist(df[TARGET])
+    dist_uf = _dist(df["uf"], top=15)
+    dist_mes = _dist(df["mes"])
+    dist_periodo = _dist(df["periodo_dia"])
+    dist_fase = _dist(df["fase_dia"]) if "fase_dia" in df.columns else []
+    dist_causa = _dist(df["causa_acidente"], top=15)
+    dist_tipo = _dist(df["tipo_acidente"], top=15)
+    cond_col = "condicao_metereologica" if "condicao_metereologica" in df.columns else None
+    dist_cond = _dist(df[cond_col]) if cond_col else []
+    dist_pista = _dist(df["tipo_pista"]) if "tipo_pista" in df.columns else []
+    dist_solo = _dist(df["uso_solo"]) if "uso_solo" in df.columns else []
+    dist_dia = _dist(df["dia_semana"]) if "dia_semana" in df.columns else []
+
+    # Faixas de veículos
+    vei = df["veiculos"] if "veiculos" in df.columns else pd.Series(dtype=int)
+    bins = [-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 100]
+    labels = ["0", "1", "2", "3", "4", "5+"]
+    dist_vei = [{"label": lab, "count": int(cnt)} for lab, cnt in zip(
+        labels, pd.cut(vei, bins=bins, labels=labels).value_counts().reindex(labels).fillna(0).values)]
+
+    # Matriz de confusão formato amigável para o dashboard
+    matriz = {
+        "labels": [str(c) for c in classes_ordenadas],
+        "short_labels": [str(c).replace("Com Vítimas ", "").replace("Sem Vítimas", "Sem Vit")[:15] for c in classes_ordenadas],
+        "normalized": cm.tolist(),
+        "counts": cm_counts.tolist(),
+        "support": support.tolist(),
+    }
+
+    # KPIs derivados
+    recall_fatais = float(report.get("Com Vítimas Fatais", {}).get("recall", 0))
+    precision_fatais = float(report.get("Com Vítimas Fatais", {}).get("precision", 0))
+    f1_fatais = float(report.get("Com Vítimas Fatais", {}).get("f1-score", 0))
+    recall_feridos = float(report.get("Com Vítimas Feridas", {}).get("recall", 0))
+    recall_sem = float(report.get("Sem Vítimas", {}).get("recall", 0))
+
+    # Baseline sempre prediz a classe majoritária → recall de fatais = 0
+    classe_maj = pd.Series(y_train).value_counts().idxmax()
+    baseline_recall_fatais = 1.0 if classe_maj == "Com Vítimas Fatais" else 0.0
+
+    kpis = {
+        "baseline_acc": float(metricas["acc_baseline"]),
+        "model_acc_train": float(metricas["acc_train"]),
+        "model_acc_test": float(metricas["acc_test"]),
+        "gap_overfit": float(metricas["acc_train"] - metricas["acc_test"]),
+        "lift_acc_vs_baseline": float(metricas["acc_test"] - metricas["acc_baseline"]),
+        "recall_fatais": recall_fatais,
+        "recall_feridos": recall_feridos,
+        "recall_sem_vitimas": recall_sem,
+        "precision_fatais": precision_fatais,
+        "f1_fatais": f1_fatais,
+        "baseline_recall_fatais": baseline_recall_fatais,
+        "lift_recall_fatais": recall_fatais - baseline_recall_fatais,
+        "taxa_global_fatais": float(TAXA_GLOBAL_FATAIS),
+    }
+
+    # Hiperparâmetros testados (grid 3x3)
+    hp_rows = buscar_hp.to_dict(orient="records")
+
+    # Top 20 importâncias
+    importancias = []
+    for _, row in df_imp.head(20).iterrows():
+        col_orig, valor = _decod(row["feature"])
+        importancias.append({
+            "feature": row["feature"],
+            "importance": float(row["importance"]),
+            "col_orig": col_orig,
+            "valor": valor,
+        })
+
+    payload = {
+        "meta": {
+            "n_registros": int(len(df)),
+            "n_features": int(len(df_imp)),
+            "n_train": int(len(y_train)),
+            "n_test": int(len(y_test)),
+            "target": TARGET,
+            "classes": [str(c) for c in classes_ordenadas],
+            "random_state": RANDOM_STATE,
+            "test_size": TEST_SIZE,
+            "hiperparams": {
+                "criterion": "entropy",
+                "max_depth": MAX_DEPTH_DEFAULT,
+                "min_samples_leaf": MIN_SAMPLES_LEAF_DEFAULT,
+                "class_weight": "balanced",
+            },
+            "leakage_cols": LEAKAGE_COLS,
+            "modelo_depth_real": int(modelo.get_depth()),
+            "modelo_n_leaves": int(modelo.get_n_leaves()),
+            "arvore_png": "outputs/arvore_decisao.png",
+            "matriz_png": "outputs/matriz_confusao.png",
+            "importancia_png": "outputs/importancia_atributos.png",
+        },
+        "kpis": kpis,
+        "matriz_confusao": matriz,
+        "classification_report": {
+            "por_classe": [
+                {
+                    "classe": str(cls),
+                    "precision": float(report[cls]["precision"]),
+                    "recall": float(report[cls]["recall"]),
+                    "f1": float(report[cls]["f1-score"]),
+                    "support": int(report[cls]["support"]),
+                }
+                for cls in classes_ordenadas
+            ],
+            "macro_avg": {k: float(v) if isinstance(v, (int, float)) else v
+                          for k, v in report.get("macro avg", {}).items()},
+            "weighted_avg": {k: float(v) if isinstance(v, (int, float)) else v
+                             for k, v in report.get("weighted avg", {}).items()},
+        },
+        "hiperparametros": hp_rows,
+        "importancias_top20": importancias,
+        "recomendacoes_top10": recomendacoes,
+        "distribuicoes": {
+            "alvo": dist_alvo,
+            "uf": dist_uf,
+            "mes": dist_mes,
+            "periodo_dia": dist_periodo,
+            "fase_dia": dist_fase,
+            "causa_acidente": dist_causa,
+            "tipo_acidente": dist_tipo,
+            "condicao_metereologica": dist_cond,
+            "tipo_pista": dist_pista,
+            "uso_solo": dist_solo,
+            "dia_semana": dist_dia,
+            "veiculos": dist_vei,
+        },
+    }
+
+    OUTPUTS_DIR.mkdir(exist_ok=True)
+    JSON_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[JSON] Exportado para dashboard: {JSON_PATH}  ({JSON_PATH.stat().st_size / 1024:.1f} KB)")
+    return payload
+
+
+# ============================================================
 # MAIN
 # ============================================================
 def main():
@@ -713,7 +955,7 @@ def main():
     print(f"[Baseline] DummyClassifier(most_frequent) treinado.")
 
     # 10. Busca de hiperparâmetros
-    buscar_hiperparametros(X_train, y_train, X_test, y_test)
+    buscar_hp_df = buscar_hiperparametros(X_train, y_train, X_test, y_test)
 
     # 11. Modelo final
     modelo = treinar_modelo_final(X_train, y_train)
@@ -739,10 +981,25 @@ def main():
         top_n_atributos=10,
     )
 
+    # 15. Exportar resultados.json para o dashboard Next.js
+    exportar_resultados_json(
+        df=df_para_relatorio,
+        df_imp=df_imp,
+        modelo=modelo,
+        X_train=X_train,
+        y_train=y_train,
+        y_test=y_test,
+        y_pred=metricas["y_pred"],
+        metricas=metricas,
+        buscar_hp=buscar_hp_df,
+        baseline=baseline,
+    )
+
     print("\n" + "=" * 70)
     print("PIPELINE CONCLUIDO.")
     print(f"  Outputs:  {OUTPUTS_DIR}/")
     print(f"  Relatório: {RELATORIO_PATH}")
+    print(f"  JSON dashboard: {JSON_PATH}")
     print("=" * 70)
 
 
