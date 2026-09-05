@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@400;700;900&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @page { size: A4; margin: 0; }
+    :root {
+      --c-bg: #0f1c2e;
+      --c-accent: #d4a056;
+      --c-text: #ffffff;
+      --c-muted: #a8b5c8;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 210mm;
+      height: 297mm;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    }
+    @media screen {
+      html {
+        height: auto;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        background: var(--c-bg);
+      }
+      body {
+        transform-origin: top center;
+        scale: min(1, calc(100vw / 794), calc(100vh / 1123));
+        margin: 0 auto;
+        box-shadow: 0 0 60px rgba(0,0,0,0.4);
+      }
+    }
+    .cover {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      box-sizing: border-box;
+      background: var(--c-bg);
+    }
+    .rule-top, .rule-bottom {
+      position: absolute;
+      left: 114px;
+      right: 114px;
+      height: 2px;
+      background: var(--c-accent);
+    }
+    .rule-top { top: 114px; }
+    .rule-bottom { bottom: 114px; }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .center-block {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 114px;
+      right: 114px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .label {
+      font-size: 9pt;
+      color: var(--c-accent);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      font-weight: 500;
+    }
+    .title {
+      font-size: 36pt;
+      font-weight: 900;
+      line-height: 1.15;
+      font-family: 'Playfair Display', 'Noto Serif SC', serif;
+      margin-bottom: 24px;
+      max-width: 520px;
+    }
+    .subtitle {
+      font-size: 14pt;
+      color: var(--c-muted);
+      margin-bottom: 56px;
+      max-width: 480px;
+      line-height: 1.55;
+      font-weight: 300;
+    }
+    .meta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 40px;
+    }
+    .meta-label {
+      font-size: 8pt;
+      color: var(--c-accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .meta-value {
+      font-size: 12pt;
+      color: var(--c-text);
+      font-weight: 400;
+    }
+    .footer {
+      position: absolute;
+      bottom: 60px;
+      left: 114px;
+      right: 114px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 9pt;
+      color: var(--c-muted);
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <div class="grid-bg"></div>
+    <div class="rule-top"></div>
+    <div class="rule-bottom"></div>
+    <div class="center-block">
+      <div class="label">AV1 · Roteiro de Vídeo</div>
+      <div class="title">Árvore de Decisão para Campanhas Educativas no Trânsito</div>
+      <div class="subtitle">Roteiro completo e didático para gravação de vídeo de 5 a 7 minutos, descrevendo o processo de implementação do algoritmo e os resultados do dashboard.</div>
+      <div class="meta-block">
+        <div class="meta-label">BASE</div>
+        <div class="meta-value">72.529 sinistros PRF · 2025</div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-label">ALGORITMO</div>
+        <div class="meta-value">DecisionTree · criterion=entropy</div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>ROTEIRO V1.0</span>
+      <span>ENTREGA AV1 · 2025</span>
+    </div>
+  </div>
+</body>
+</html>
