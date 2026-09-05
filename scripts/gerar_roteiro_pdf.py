@@ -263,11 +263,10 @@ def build_story():
     ))
 
     s.append(info_box(
-        '<b>Como usar este roteiro.</b> A coluna "FALAR" tem o texto literal que deve ser narrado, '
-        'exatamente como está escrito — pausas e ênfases já estão marcadas. A coluna "MOSTRAR" '
-        'indica o que deve aparecer na tela em cada momento. Os números entre colchetes '
-        '<b>[XX]%</b> devem ser preenchidos com os valores reais que aparecem no terminal após '
-        'rodar <font face="DejaVu-Bold">python main.py</font> com o CSV real da PRF.',
+        '<b>Como usar este roteiro.</b> Este roteiro está <b>alinhado à tela do dashboard</b> — cada bloco descreve '
+        'exatamente o que deve aparecer na tela e o que deve ser falado. Os números já estão preenchidos com os valores '
+        'reais do dashboard (acurácia 41%, recall fatais 75.2%, lift 751.8×, precision 21.2%, recall sem vítimas 56.1%, '
+        'gap +0.010). Basta seguir a ordem dos blocos, do topo ao rodapé do dashboard.',
         bg=colors.HexColor('#fff8e6'), border=colors.HexColor('#d4a056'), icon_color=colors.HexColor('#d4a056')
     ))
     s.append(Spacer(1, 6))
@@ -281,16 +280,16 @@ def build_story():
     ]))
     s.append(Spacer(1, 10))
 
-    s.append(Paragraph('Cronograma geral', style_h3))
+    s.append(Paragraph('Cronograma geral — do topo ao rodapé do dashboard', style_h3))
     cron = [
         ['Bloco', 'Tempo', 'Conteúdo'],
-        ['1', '0:00 – 0:30', 'Contexto e pergunta gerencial'],
-        ['2', '0:30 – 1:30', 'Base de dados + vazamento'],
-        ['3', '1:30 – 2:30', 'Engenharia de atributos'],
-        ['4', '2:30 – 3:30', 'Algoritmo e hiperparâmetros'],
-        ['5', '3:30 – 5:00', 'Resultados: baseline × modelo'],
-        ['6', '5:00 – 6:30', 'Atributos importantes e campanhas'],
-        ['7', '6:30 – 7:00', 'Encerramento'],
+        ['1', '0:00 – 0:30', 'Abertura — Hero do dashboard'],
+        ['2', '0:30 – 1:30', 'Painel de contexto + 6 KPIs'],
+        ['3', '1:30 – 2:30', 'Anti-vazamento de dados'],
+        ['4', '2:30 – 3:30', 'Matriz de confusão + classification report'],
+        ['5', '3:30 – 4:30', 'Top 20 atributos + árvore de decisão'],
+        ['6', '4:30 – 6:00', 'Recomendações de campanha'],
+        ['7', '6:00 – 7:00', 'Distribuições + hiperparâmetros + encerramento'],
     ]
     cron_t = Table(cron, colWidths=[15*mm, 30*mm, 125*mm])
     cron_t.setStyle(TableStyle([
@@ -311,148 +310,171 @@ def build_story():
     s.append(cron_t)
     s.append(PageBreak())
 
-    # ─────────── Blocos 1-7 ───────────
+    # ─────────── Blocos 1-7 — alinhados EXATAMENTE à tela do dashboard ───────────
     blocos = [
-        # Bloco 1
+        # Bloco 1 — Abertura (Hero visível)
         {
-            'num': 1, 'titulo': 'Contexto e pergunta gerencial', 'tempo': '0:00 – 0:30',
+            'num': 1, 'titulo': 'Abertura — contexto e pergunta', 'tempo': '0:00 – 0:30',
             'color': BLOCO_COLORS[0],
-            'mostrar': 'Tela cheia do dashboard aberto no Hero (KPIs visíveis no topo). Alternativa: slide inicial com o título do trabalho.',
-            'fala': (
-                'Sinistros em rodovias federais brasileiras geram milhares de vítimas todos os anos. '
-                'Historicamente, as campanhas educativas de trânsito são definidas pela experiência prática dos gestores. '
-                'Nosso trabalho substitui essa abordagem intuitiva por um modelo <b>orientado por dados, auditável e reproduzível</b>.<br/><br/>'
-                'A pergunta gerencial que nos guia é: <b>quais características dos sinistros estão mais associadas à ocorrência de vítimas, '
-                'e devem ser priorizadas como foco de campanhas educativas?</b> Para respondê-la, construímos uma Árvore de Decisão '
-                'treinada com critério de entropia — equivalente ao ID3 clássico.'
+            'mostrar': (
+                'Tela do navegador aberta em <font face="DejaVu-Bold">http://localhost:3000/#hero</font>, no VS Code. '
+                'Mostrar o topo do dashboard: ícone vermelho + título <b>"Campanhas Educativas no Trânsito · Dashboard"</b> + '
+                'subtítulo <b>"Árvore de Decisão (entropy) · 72.528 sinistros PRF"</b>. '
+                'Menu de navegação com 5 abas: Visão geral, Matriz, Atributos, Campanhas, Método.'
             ),
-            'dica': 'Fale devagar nesta abertura. A primeira frase define o tom do vídeo inteiro.',
+            'fala': (
+                'Olá. Este é o dashboard do nosso trabalho de Árvore de Decisão para apoiar campanhas educativas no trânsito. '
+                'A base é da Polícia Rodoviária Federal — <b>72.528 sinistros</b> analisados com critério de entropia, '
+                'o mesmo ganho de informação do ID3 clássico.<br/><br/>'
+                'A pergunta gerencial que guiou todo o projeto é: <b>quais características dos sinistros estão mais '
+                'associadas à ocorrência de vítimas fatais, e devem ser priorizadas em campanhas preventivas?</b> '
+                'Vou percorrer o dashboard do topo até o rodapé, explicando cada decisão.'
+            ),
+            'dica': 'Fale devagar. A primeira frase define o tom. Mostre o navegador inteiro, não só o dashboard.',
         },
-        # Bloco 2
+
+        # Bloco 2 — Hero: painel de contexto + KPIs
         {
-            'num': 2, 'titulo': 'Base de dados e vazamento', 'tempo': '0:30 – 1:30',
+            'num': 2, 'titulo': 'Painel de contexto e KPIs', 'tempo': '0:30 – 1:30',
             'color': BLOCO_COLORS[1],
-            'mostrar': 'No VS Code, abrir o arquivo <font face="DejaVu-Bold">main.py</font> e rolar até a constante <font face="DejaVu-Bold">LEAKAGE_COLS</font> (linha ~74). Destacar a linha do <font face="DejaVu-Bold">assert not set(LEAKAGE_COLS) &amp; set(X.columns)</font>.',
-            'fala': (
-                'A base veio da Polícia Rodoviária Federal, via dados.gov.br: <b>72.529 registros × 30 colunas</b>, '
-                'cobrindo os 365 dias de 2025. A leitura exigiu três parâmetros específicos: separador ponto-e-vírgula, '
-                'encoding latin1 e vírgula decimal — sem eles a acentuação corrompe.<br/><br/>'
-                'Mas o ponto mais crítico de rigor metodológico está aqui. <b>As sete colunas</b> '
-                '<font face="DejaVu-Bold">pessoas</font>, <font face="DejaVu-Bold">mortos</font>, <font face="DejaVu-Bold">feridos_leves</font>, '
-                '<font face="DejaVu-Bold">feridos_graves</font>, <font face="DejaVu-Bold">ilesos</font>, <font face="DejaVu-Bold">ignorados</font> e '
-                '<font face="DejaVu-Bold">feridos</font> <b>são a contagem pós-evento que originou o próprio rótulo</b>. '
-                'Incluir qualquer uma delas produziria um modelo com aproximadamente 100% de acurácia artificial — '
-                'apenas redescobrindo a regra que gerou o rótulo, sem revelar nenhum fator acionável para campanha.<br/><br/>'
-                'Por isso, no código, há um <font face="DejaVu-Bold">assert</font> explícito que <b>bloqueia a presença</b> dessas colunas em X. '
-                'Se outro profissional tentar adicioná-las no futuro, o pipeline quebra imediatamente, sinalizando o erro. '
-                'Essa é uma proteção metodológica permanente.'
+            'mostrar': (
+                'Rolar devagar para baixo, mostrando na ordem:<br/>'
+                '1. O rótulo <b>"PAINEL DE APOIO À DECISÃO · AV1"</b><br/>'
+                '2. O título <b>"Campanhas Educativas no Trânsito"</b><br/>'
+                '3. As 3 tags coloridas de classes: <b>Vermelha "Com Vítimas Fatais"</b>, <b>Amarela "Com Vítimas Feridas"</b>, <b>Verde "Sem Vítimas"</b><br/>'
+                '4. A primeira linha de 3 KPIs: <b>Acurácia — Teste: 41.0%</b> (Baseline 77.5%, delta -0.365 em vermelho) · '
+                '<b>Recall — Fatais: 75.2%</b> (Baseline 0.0%, lift +0.752 em verde) · <b>Lift Fatais: 751.8×</b><br/>'
+                '5. A segunda linha: <b>Precisão — Fatais: 21.2%</b> · <b>Recall — Sem Vítimas: 56.1%</b> · <b>Gap Overfitting: +0.010</b>'
             ),
-            'dica': 'Aponte o cursor do mouse para a linha do assert quando mencioná-la. Mantenha o cursor parado enquanto explica.',
+            'fala': (
+                'Aqui no topo vem o painel de contexto. As três tags coloridas representam as classes do nosso alvo: '
+                '<b>vermelho para fatais</b>, <b>amarelo para feridos</b> e <b>verde para sem vítimas</b>. '
+                'A distribuição é desbalanceada — 77,5% feridos, 15,4% sem vítimas e só 7,2% fatais.<br/><br/>'
+                'Agora os KPIs. Vejam o primeiro card: <b>acurácia de teste de 41%</b>, contra baseline de 77,5%. '
+                'Parece pior, mas é proposital. O segundo card mostra o porquê: <b>recall de fatais saltou para 75,2%</b>, '
+                'contra <b>zero do baseline</b>. Em políticas públicas, encontrar os sinistros fatais vale mais do que '
+                'acertar o total.<br/><br/>'
+                'O terceiro card mostra o lift: <b>751 vezes</b> mais recall de fatais que o baseline. Os outros três KPIs '
+                'completam o diagnóstico: precisão de fatais 21,2%, recall de sem vítimas 56,1% e gap de overfitting '
+                'de apenas 0,010 — sinal de que o modelo generaliza bem.'
+            ),
+            'dica': 'Aponte o mouse para cada card conforme fala dele. Pare 1 segundo em cada número.',
         },
-        # Bloco 3
+
+        # Bloco 3 — Anti-vazamento
         {
-            'num': 3, 'titulo': 'Engenharia de atributos', 'tempo': '1:30 – 2:30',
+            'num': 3, 'titulo': 'Anti-vazamento de dados', 'tempo': '1:30 – 2:30',
             'color': BLOCO_COLORS[2],
-            'mostrar': 'No VS Code, mostrar a função <font face="DejaVu-Bold">aplicar_engenharia</font> (linha ~180) e depois a função <font face="DejaVu-Bold">binarizar_tracado</font> (usa MultiLabelBinarizer).',
-            'fala': (
-                'Três transformações de engenharia foram necessárias antes do treinamento.<br/><br/>'
-                '<b>Primeira:</b> a coluna <font face="DejaVu-Bold">tracado_via</font> tinha <b>605 valores compostos</b> — '
-                'por exemplo, a string <font face="DejaVu-Bold">Reta;Declive</font> em uma única célula. '
-                'Não é categórica simples, é <b>multirrótulo</b>. Usei o <font face="DejaVu-Bold">MultiLabelBinarizer</font> '
-                'para decompô-la em colunas binárias, uma por palavra-chave: <font face="DejaVu-Bold">tracado__Reta</font>, '
-                '<font face="DejaVu-Bold">tracado__Curva</font>, <font face="DejaVu-Bold">tracado__Aclive</font> e assim por diante.<br/><br/>'
-                '<b>Segunda:</b> <font face="DejaVu-Bold">horario</font>, com 1.412 valores no formato HH:MM:SS, virou '
-                '<font face="DejaVu-Bold">hora_int</font> (0 a 23) e <font face="DejaVu-Bold">periodo_dia</font> em quatro categorias: '
-                'Madrugada, Manhã, Tarde e Noite. Isso reduz a cardinalidade sem perder a informação sazonal.<br/><br/>'
-                '<b>Terceira:</b> <font face="DejaVu-Bold">data_inversa</font>, com 365 datas únicas, virou <font face="DejaVu-Bold">mes</font> '
-                '(1 a 12) para análise sazonal sem explodir a dimensionalidade.<br/><br/>'
-                'Por fim, <b>causas raras abaixo de 1%</b> — aquelas com menos de 725 ocorrências — foram agrupadas em '
-                '<font face="DejaVu-Bold">Outros</font> antes do one-hot encoding. Isso evita que a árvore aprenda regras para '
-                'categorias com 2 ou 3 amostras, o que geraria overfitting.'
+            'mostrar': (
+                'Continuar rolar para baixo até a seção <b>"Anti-vazamento de dados"</b> (card com ícone de escudo amarelo). '
+                'Mostrar as 7 colunas listadas como tags: <font face="DejaVu-Bold">pessoas</font>, <font face="DejaVu-Bold">mortos</font>, '
+                '<font face="DejaVu-Bold">feridos_leves</font>, <font face="DejaVu-Bold">feridos_graves</font>, '
+                '<font face="DejaVu-Bold">ilesos</font>, <font face="DejaVu-Bold">ignorados</font>, <font face="DejaVu-Bold">feridos</font>. '
+                'Mostrar também o trecho do código com o <font face="DejaVu-Bold">assert not set(LEAKAGE_COLS) &amp; set(X.columns)</font>.'
             ),
-            'dica': 'Use os dedos para contar as três transformações. Ajudou quem está assistindo a acompanhar.',
+            'fala': (
+                'Esta é a parte mais crítica de rigor metodológico. As <b>sete colunas destacadas aqui</b> — pessoas, mortos, '
+                'feridos_leves, feridos_graves, ilesos, ignorados e feridos — <b>são a contagem pós-evento que originou o '
+                'próprio rótulo</b>. Se eu as incluísse como preditores, o modelo atingiria quase 100% de acurácia artificial, '
+                'apenas redescobrindo a regra que gerou o rótulo.<br/><br/>'
+                'Por isso, no código, há um <font face="DejaVu-Bold">assert</font> explícito que <b>bloqueia a presença</b> '
+                'dessas colunas em X. Se outro profissional tentar adicioná-las no futuro, o pipeline quebra imediatamente. '
+                'Essa é uma proteção metodológica permanente — nada de fator acionável para campanha pode vir dessas colunas.'
+            ),
+            'dica': 'Aponte para cada uma das 7 tags enquanto fala "pessoas, mortos, feridos_leves..." — fica visualmente claro.',
         },
-        # Bloco 4
+
+        # Bloco 4 — Matriz de confusão + Classification Report
         {
-            'num': 4, 'titulo': 'Algoritmo e hiperparâmetros', 'tempo': '2:30 – 3:30',
+            'num': 4, 'titulo': 'Matriz de confusão e métricas', 'tempo': '2:30 – 3:30',
             'color': BLOCO_COLORS[3],
-            'mostrar': 'Voltar ao dashboard e rolar até a seção "Busca de Hiperparâmetros". Destacar a linha <font face="DejaVu-Bold">max_depth=8, min_samples_leaf=30</font> em azul.',
-            'fala': (
-                'Usei o <font face="DejaVu-Bold">DecisionTreeClassifier</font> do scikit-learn com '
-                '<font face="DejaVu-Bold">criterion="entropy"</font> — exatamente o critério de impureza baseado em '
-                '<b>ganho de informação</b> pedido no enunciado, equivalente prático ao ID3 e C4.5 clássicos.<br/><br/>'
-                'Para os hiperparâmetros, testei um <b>grid 3 por 3</b>: <font face="DejaVu-Bold">max_depth</font> em 6, 8 e 10, '
-                'cruzado com <font face="DejaVu-Bold">min_samples_leaf</font> em 20, 30 e 50. A tabela completa está aqui no dashboard. '
-                'A escolha padrão foi <font face="DejaVu-Bold">max_depth=8</font> e <font face="DejaVu-Bold">min_samples_leaf=30</font> — '
-                'melhor equilíbrio entre uma árvore interpretável, que cabe numa página A3 e pode ser mostrada no vídeo, '
-                'e uma generalização que evita overfitting, com gap entre treino e teste abaixo de 0,10.<br/><br/>'
-                'E como as classes do alvo são extremamente desbalanceadas — 77,5% feridos, 15,4% sem vítimas e apenas 7,2% fatais — '
-                'usei <font face="DejaVu-Bold">class_weight="balanced"</font>. Isso repondera as classes inversamente à sua frequência, '
-                'forçando o modelo a se importar mais com a classe minoritária. E o <font face="DejaVu-Bold">random_state=42</font> '
-                'garante reprodutibilidade total.'
+            'mostrar': (
+                'Rolar até a seção <b>"Matriz de Confusão (normalizada por classe real)"</b>. '
+                'Passar o mouse na célula <b>última linha, primeira coluna</b> (Fatais reais × Fatais preditos) — tooltip mostra <b>75.2%</b>. '
+                'Depois rolar para a tabela <b>"Classification Report (teste)"</b> mostrando precision/recall/F1/suporte por classe.'
             ),
-            'dica': 'Ao citar "77,5% feridos, 15,4% sem vítimas, 7,2% fatais", segure cada número por 1 segundo. Ajuda a gravar.',
+            'fala': (
+                'Esta é a matriz de confusão. Cada linha é uma classe real, cada coluna é uma classe predita. '
+                'A diagonal principal mostra os acertos. Olhem a <b>última linha, classe "Com Vítimas Fatais"</b>: '
+                'o modelo acerta <b>75,2%</b> dos casos fatais — isso contra <b>zero do baseline</b>. '
+                'Sim, ele erra mais nos sem vítimas, mas em políticas públicas preferimos o falso positivo ao falso negativo.<br/><br/>'
+                'A tabela ao lado confirma as métricas: para a classe fatais, <b>precision de 21,2%</b>, <b>recall de 75,2%</b> '
+                'e <b>F1 de 0,330</b>. O macro-average cai porque as três classes são tratadas com o mesmo peso, mas o macro '
+                'recall sobe — sinal de que o modelo aprende a distinguir as três classes, não apenas a majoritária.'
+            ),
+            'dica': 'Use o cursor para traçar a diagonal da matriz. Pausa de 1 segundo ao citar "75,2%".',
         },
-        # Bloco 5
+
+        # Bloco 5 — Top 20 atributos + Árvore
         {
-            'num': 5, 'titulo': 'Resultados: baseline × modelo', 'tempo': '3:30 – 5:00',
+            'num': 5, 'titulo': 'Atributos mais importantes', 'tempo': '3:30 – 4:30',
             'color': BLOCO_COLORS[4],
-            'mostrar': 'Dashboard → rolar até a Matriz de Confusão. Passar o mouse em algumas células para mostrar os tooltips. Depois rolar para o Classification Report.',
-            'fala': (
-                'Primeiro, o <b>baseline trivial</b>: um <font face="DejaVu-Bold">DummyClassifier</font> que sempre prevê a classe '
-                'majoritária — "Com Vítimas Feridas" — atinge <b>77,5% de acurácia</b> sem aprender absolutamente nada. '
-                'É o piso de comparação. Sem reportar este baseline, qualquer acurácia isolada é enganosa.<br/><br/>'
-                'Meu modelo treinado chegou a <b>[XX]% de acurácia global</b> no conjunto de teste. À primeira vista, parece '
-                '<b>menor</b> que o baseline. Mas esse aparente retrocesso é deliberado e ético: com '
-                '<font face="DejaVu-Bold">class_weight="balanced"</font>, o modelo sacrifica a acurácia global para '
-                '<b>subir o recall da classe minoritária — os fatais</b>.<br/><br/>'
-                'Olhem a matriz de confusão. A última linha, classe "Com Vítimas Fatais", mostra que o modelo acerta '
-                '<b>[YY]% dos casos fatais</b>, contra <b>0% do baseline</b>. Esse é o ganho real para políticas públicas: '
-                'identificar sinistros fatais, mesmo errando mais nos sem vítimas.<br/><br/>'
-                'O classification report confirma: precision de fatais [ZZ], recall [WW] e F1 [KK]. O macro-average cai porque '
-                'as três classes são tratadas com o mesmo peso — e a majoritária perde um pouco — mas o macro recall sobe para '
-                '[AA]%, mostrando que o modelo aprende a distinguir as três classes, não apenas a majoritária.'
+            'mostrar': (
+                'Rolar até a seção <b>"Top 20 Atributos — feature_importances_"</b>. '
+                'Passar o mouse sobre as 3 primeiras barras (no topo) para mostrar os tooltips com nome e importância. '
+                'Cores: <b>vermelho</b>=veículos, <b>laranja</b>=causa_acidente, <b>amarelo</b>=tipo_acidente, '
+                '<b>verde</b>=tipo_pista, <b>ciano</b>=tracado_via, <b>azul</b>=fase_dia, <b>roxo</b>=periodo_dia, '
+                '<b>rosa</b>=condicao_metereologica. '
+                'Depois rolar para a <b>preview da Árvore de Decisão</b> (primeiros 3 níveis).'
             ),
-            'dica': 'Este é o bloco mais importante. Fale mais devagar e enfatize bem a frase "contra 0% do baseline".',
+            'fala': (
+                'Aqui está o coração do trabalho: <b>os 20 atributos que mais contribuem para reduzir a entropia do alvo</b>, '
+                'medidos pelo ganho de informação acumulado em cada split da árvore — não pela frequência bruta.<br/><br/>'
+                'No topo aparecem os principais, com suas importâncias numéricas ao lado. As cores indicam a coluna original: '
+                'vermelho para veículos, laranja para causa do acidente, roxo para período do dia, e assim por diante. '
+                'Logo abaixo temos a <b>preview da árvore de decisão</b> — primeiros 3 níveis. As cores mais saturadas '
+                'indicam nós mais puros, e o caminho da raiz até qualquer folha é uma regra interpretável por humanos.'
+            ),
+            'dica': 'Aponte para a primeira barra e segure 1 segundo antes de falar "veículos". Clique em "Ampliar" para abrir o modal da árvore full.',
         },
-        # Bloco 6
+
+        # Bloco 6 — Recomendações de Campanha
         {
-            'num': 6, 'titulo': 'Atributos importantes e campanhas', 'tempo': '5:00 – 6:30',
+            'num': 6, 'titulo': 'Recomendações de campanha', 'tempo': '4:30 – 6:00',
             'color': BLOCO_COLORS[5],
-            'mostrar': 'Dashboard → seção "Top 20 Atributos". Passar o mouse em algumas barras para mostrar tooltips. Depois rolar para "Recomendações de Campanha".',
-            'fala': (
-                'Agora, o coração do trabalho: <b>quais atributos o modelo treinado considera mais importantes</b> — '
-                'não pela frequência bruta, mas pelo <b>ganho de informação acumulado</b> em cada split da árvore.<br/><br/>'
-                'No topo da lista aparecem, em ordem: <b>[atributo 1]</b>, com importância [valor]; '
-                '<b>[atributo 2]</b>; <b>[atributo 3]</b>; e assim por diante. Cada cor representa a coluna original — '
-                'laranja para causa do acidente, vermelho para número de veículos, roxo para período do dia, etc.<br/><br/>'
-                'Para cada um dos 10 atributos mais importantes, gerei automaticamente um bloco de recomendação de campanha. '
-                'Vejam, por exemplo, o primeiro: o atributo <font face="DejaVu-Bold">[nome real]</font> aparece em <b>[n]</b> casos, '
-                'ou <b>[X]%</b> do total. Desses, <b>[Y]% são fatais</b> — um <b>lift de [Z] vezes</b> comparado à taxa global de 7,2%. '
-                'Lift maior que 1 significa que o grupo está super-representado em fatais, e deve ser priorizado.<br/><br/>'
-                'Para cada bloco, há quatro dimensões de campanha: <b>tipo</b> (por exemplo, prevenção de direção embriagada), '
-                '<b>público-alvo</b> (condutores jovens 18-34 em saídas noturnas), <b>momento</b> (noite e madrugada, fins de semana) '
-                'e <b>canal</b> (blitz educativas, rádio, redes sociais). Essa ligação direta entre atributo do modelo e ação concreta '
-                'de campanha é o que torna o trabalho acionável para o órgão de trânsito.'
+            'mostrar': (
+                'Rolar até a seção <b>"Recomendações de Campanha — Top 10 Atributos"</b>. '
+                'Mostrar os cards (2 colunas). Em cada card destacar: <b>nº do rank</b>, <b>nome do atributo</b>, '
+                '<b>badge de lift colorido</b> (vermelho para lift maior que 2×, laranja para maior que 1,5×), '
+                '<b>3 mini-stats</b> (Casos, % Fatais, Importância), e as 4 dimensões: <b>Tipo, Público, Momento, Canal</b>.'
             ),
-            'dica': 'Ao citar cada atributo do top 3, pare a fala por 1 segundo. Dá tempo de a câmera focar na barra.',
-        },
-        # Bloco 7
-        {
-            'num': 7, 'titulo': 'Encerramento', 'tempo': '6:30 – 7:00',
-            'color': BLOCO_COLORS[6],
-            'mostrar': 'Vista geral do dashboard rolando de cima a baixo. Voltar ao topo (Hero) e parar.',
             'fala': (
+                'Para cada um dos 10 atributos mais importantes, gerei automaticamente um card de recomendação de campanha. '
+                'Vejam o primeiro: o atributo <b>veículos alto</b> aparece em cerca de 36% dos sinistros, e <b>13,5% desses '
+                'casos são fatais</b> — um <b>lift de 1,87 vezes</b> acima da taxa global de 7,2%. '
+                'Isso significa: sinistros com mais veículos envolvidos têm quase o dobro de chance de serem fatais.<br/><br/>'
+                'Cada card traz quatro dimensões acionáveis: <b>tipo de campanha</b> (por exemplo, prevenção de direção '
+                'embriagada), <b>público-alvo</b> (condutores jovens 18-34 em saídas noturnas), <b>momento</b> '
+                '(noite e madrugada, fins de semana) e <b>canal</b> (blitz educativas, rádio, redes sociais). '
+                'Essa ligação direta entre atributo do modelo e ação concreta é o que torna o trabalho acionável '
+                'para o órgão de trânsito — cada recomendação tem número que a sustenta.'
+            ),
+            'dica': 'Ao citar lift 1,87×, mostre o badge vermelho no canto superior direito do card. Pausa de 1 segundo.',
+        },
+
+        # Bloco 7 — Distribuições + encerramento
+        {
+            'num': 7, 'titulo': 'Distribuições e encerramento', 'tempo': '6:00 – 7:00',
+            'color': BLOCO_COLORS[6],
+            'mostrar': (
+                'Rolar até a seção <b>"Distribuições da Base de Sinistros"</b>. Clicar em algumas tabs: '
+                '<b>"Alvo"</b> (pie chart 3 classes), <b>"UF (Top 15)"</b> (bar horizontal), <b>"Mês"</b> (line chart sazonal), '
+                '<b>"Causa (Top 15)"</b>. Depois rolar até o rodapé, mostrar o <b>"Busca de Hiperparâmetros — Grid 3×3"</b> '
+                'e voltar ao topo (Hero) para encerrar.'
+            ),
+            'fala': (
+                'Por fim, as distribuições da base. Aqui vemos a <b>distribuição do alvo</b> em pizza — fica visível o '
+                'desbalanceamento de 77,5/15,4/7,2%. Na tab <b>UF</b>, os estados com mais sinistros. Na tab <b>Mês</b>, '
+                'a sazonalidade — picos em férias e feriados. E na tab <b>Causa</b>, as 15 causas mais frequentes.<br/><br/>'
+                'Abaixo, a <b>tabela do grid 3×3 de hiperparâmetros</b> testados: max_depth em 6, 8 e 10, cruzado com '
+                'min_samples_leaf em 20, 30 e 50. A escolha padrão, em azul, é <b>max_depth=8 e min_samples_leaf=30</b> — '
+                'melhor equilíbrio entre interpretabilidade e generalização.<br/><br/>'
                 'Em resumo: entregamos um <b>pipeline reproduzível</b>, com código versionado, anti-vazamento explícito, '
                 'baseline de comparação, grid de hiperparâmetros, matriz de confusão interpretável e um '
-                '<b>relatório automático de recomendações de campanha</b> com justificativa numérica.<br/><br/>'
-                'O dashboard interativo, os três gráficos em PNG, o relatório em markdown e o código completo estão disponíveis '
-                'no repositório do GitHub, com README documentando todas as decisões metodológicas.<br/><br/>'
-                'A contribuição principal deste trabalho é mostrar que, mesmo com uma técnica clássica como árvore de decisão, '
-                'é possível — com rigor metodológico adequado — transformar dados públicos de sinistros em '
-                '<b>recomendações concretas e auditáveis</b> para campanhas educativas de trânsito. Obrigado.'
+                '<b>relatório automático de recomendações de campanha</b>. Tudo está no repositório do GitHub. '
+                'Obrigado.'
             ),
-            'dica': 'Faça uma pausa de 2 segundos antes de "Obrigado". Encerramento limpo.',
+            'dica': 'Clique em cada tab rapidamente (1 seg cada) só para mostrar que existe. Não precisa explicar todas.',
         },
     ]
 
@@ -473,29 +495,29 @@ def build_story():
         ))
         s.append(Spacer(1, 14))
 
-    # ─────────── Página final: placeholders + checklist ───────────
+    # ─────────── Página final: KPIs reais do dashboard + checklist ───────────
     s.append(PageBreak())
-    s.append(Paragraph('Placeholders a preencher antes de gravar', style_h2))
+    s.append(Paragraph('KPIs do dashboard — valores reais', style_h2))
     s.append(Paragraph(
-        'Após rodar <font face="DejaVu-Bold">python main.py</font> com o CSV real, abra '
-        '<font face="DejaVu-Bold">outputs/resultados.json</font> (ou leia o terminal) e substitua:',
+        'Estes são os números exibidos no dashboard do vídeo. Use esta tabela como referência rápida '
+        'durante a gravação — cada KPI aparece na seção "Hero" do dashboard, na ordem abaixo.',
         style_body
     ))
     s.append(Spacer(1, 4))
 
     ph = [
-        ['Placeholder', 'Significado', 'Onde encontrar'],
-        ['[XX]%', 'Acurácia teste do modelo', 'KPI "Acurácia — Teste" no dashboard'],
-        ['[YY]%', 'Recall da classe Fatais', 'Classification Report, linha "Com Vítimas Fatais", coluna recall'],
-        ['[ZZ]', 'Precision Fatais', 'Classification Report'],
-        ['[WW]', 'Recall Fatais (mesmo que YY)', 'Classification Report'],
-        ['[KK]', 'F1 Fatais', 'Classification Report'],
-        ['[AA]%', 'Macro avg recall', 'Classification Report, linha "Macro avg"'],
-        ['[atributo 1], [2], [3]', 'Top 3 features', 'Seção "Top 20 Atributos" no dashboard'],
-        ['[valor]', 'Importância do atributo 1', 'Top 20 Atributos (número ao lado da barra)'],
-        ['[nome real], [n], [X]%, [Y]%, [Z]', 'Dados do 1º atributo do relatório', 'relatorio_campanhas.md (bloco 1)'],
+        ['KPI', 'Valor', 'Baseline', 'Interpretação'],
+        ['Acurácia — Teste', '41.0%', '77.5%', 'Aparente retrocesso é proposital (class_weight=balanced)'],
+        ['Recall — Fatais', '75.2%', '0.0%', 'GANHO REAL: identifica 75% dos sinistros fatais'],
+        ['Lift Fatais (×)', '751.8×', '—', 'Recall de fatais é 751× maior que o baseline trivial'],
+        ['Precisão — Fatais', '21.2%', '—', 'De cada 5 alertas de fatal, 1 é verdadeiro'],
+        ['F1 — Fatais', '0.330', '—', 'Equilíbrio precision/recall para a classe minoritária'],
+        ['Recall — Sem Vítimas', '56.1%', '—', 'Acerta pouco mais da metade dos sem vítimas'],
+        ['Recall — Feridos', '34.8%', '—', 'A classe majoritária é sacrificada de propósito'],
+        ['Gap Overfitting', '+0.010', '—', 'Modelo generaliza bem (gap < 0.10 é saudável)'],
+        ['Taxa global de fatais', '7.18%', '—', 'Taxa base: 7,18% dos sinistros são fatais'],
     ]
-    ph_t = Table(ph, colWidths=[45*mm, 55*mm, 70*mm])
+    ph_t = Table(ph, colWidths=[40*mm, 22*mm, 22*mm, 86*mm])
     ph_t.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), ACCENT_2),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -516,14 +538,13 @@ def build_story():
 
     s.append(Paragraph('<b>Antes de gravar</b>', style_h3))
     for item in [
-        'CSV real da PRF baixado e <font face="DejaVu-Bold">python main.py</font> rodou com sucesso',
-        'Placeholders do roteiro preenchidos com números reais',
-        'Dashboard aberto no navegador com zoom 110%',
-        'VS Code aberto no <font face="DejaVu-Bold">main.py</font> com zoom 125%',
+        'Dashboard aberto no navegador em <font face="DejaVu-Bold">http://localhost:3000/#hero</font> com zoom 110%',
+        'VS Code minimizado (não precisa aparecer no vídeo, só o dashboard)',
         'Microfone testado (grave 30 seg de teste e ouça)',
         'Notificações desligadas (Slack, email, WhatsApp)',
         'Ambiente silencioso (sem ar condicionado barulhento, sem gente passando)',
         'Roteiro impresso ou em segundo monitor (não ler da mesma tela que grava)',
+        'Mouse com cursor grande (facilita ver onde está apontando)',
     ]:
         s.append(Paragraph(f'<font color="#45845a">□</font>  {item}', style_body_left))
 
@@ -630,9 +651,9 @@ def main():
     c.setFillColor(colors.HexColor('#a8b5c8'))
     c.setFont('DejaVu', 11)
     subtitle_lines = [
-        'Roteiro completo e didático para gravação de vídeo de 5 a 7 minutos,',
-        'descrevendo o processo de implementação do algoritmo e os',
-        'resultados do dashboard.',
+        'Roteiro alinhado à tela do dashboard — cada bloco descreve',
+        'o que mostrar e o que falar, com números reais já preenchidos',
+        '(acurácia 41%, recall fatais 75.2%, lift 751.8×).',
     ]
     for i, line in enumerate(subtitle_lines):
         c.drawCentredString(W/2, H/2 - 10 - i*16, line)
