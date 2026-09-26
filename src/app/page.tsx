@@ -9,6 +9,7 @@ import { CampaignRecommendations } from '@/components/dashboard/campaign-recomme
 import { HyperparameterTable } from '@/components/dashboard/hyperparameter-table'
 import { DistributionCharts } from '@/components/dashboard/distribution-charts'
 import { ClassificationReportTable, DecisionTreePreview } from '@/components/dashboard/classification-tree'
+import { DownloadProject } from '@/components/dashboard/download-project'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ShieldAlert, Database, GitBranch, FileText, ExternalLink, Github } from 'lucide-react'
@@ -103,6 +104,12 @@ export default function Home() {
               Campanhas
             </a>
             <a
+              href="#baixar-projeto"
+              className="inline-flex items-center text-xs px-2 py-1 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 font-medium hover:bg-amber-200"
+            >
+              Baixar projeto
+            </a>
+            <a
               href="#metodo"
               className="hidden sm:inline-flex items-center text-xs px-2 py-1 rounded hover:bg-accent"
             >
@@ -153,7 +160,12 @@ export default function Home() {
           />
         </section>
 
-        {/* 7. Rodapé com metadados e ações */}
+        {/* 7. Baixar projeto */}
+        <section className="scroll-mt-20">
+          <DownloadProject />
+        </section>
+
+        {/* 8. Rodapé com metadados e ações */}
         <section className="grid gap-6 md:grid-cols-3 scroll-mt-20">
           <InfoCard
             icon={<Database className="h-4 w-4" />}

@@ -1,0 +1,43 @@
+# Dados brutos — 21 MB, baixar manualmente da PRF (ver README.md)
+datatran2025.csv
+datatran2024.csv
+datatran*.csv
+
+# Saídas geradas pelo main.py
+outputs/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+ROTEIRO_VIDEO.md
+
+# Arquivos de roteiro do vídeo (material pessoal, não versionar)
+ROTEIRO_VIDEO.md
+ROTEIRO_VIDEO_AV1.pdf
+ROTEIRO_*.md
+ROTEIRO_*.pdf
+*_ROTEIRO_*
+
+# Screenshots/uploads feitos pelo usuário
+pasted_image_*.png
+upload/
+*.pdf.bak
