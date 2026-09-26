@@ -10,6 +10,7 @@ import { HyperparameterTable } from '@/components/dashboard/hyperparameter-table
 import { DistributionCharts } from '@/components/dashboard/distribution-charts'
 import { ClassificationReportTable, DecisionTreePreview } from '@/components/dashboard/classification-tree'
 import { DownloadProject } from '@/components/dashboard/download-project'
+import { DownloadResultadosEsperados } from '@/components/dashboard/download-resultados-esperados'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ShieldAlert, Database, GitBranch, FileText, ExternalLink, Github } from 'lucide-react'
@@ -104,7 +105,7 @@ export default function Home() {
               Campanhas
             </a>
             <a
-              href="#baixar-projeto"
+              href="#baixar"
               className="inline-flex items-center text-xs px-2 py-1 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 font-medium hover:bg-amber-200"
             >
               Baixar projeto
@@ -160,9 +161,10 @@ export default function Home() {
           />
         </section>
 
-        {/* 7. Baixar projeto */}
-        <section className="scroll-mt-20">
+        {/* 7. Baixar projeto — 2 arquivos */}
+        <section id="baixar" className="scroll-mt-20 space-y-6">
           <DownloadProject />
+          <DownloadResultadosEsperados />
         </section>
 
         {/* 8. Rodapé com metadados e ações */}

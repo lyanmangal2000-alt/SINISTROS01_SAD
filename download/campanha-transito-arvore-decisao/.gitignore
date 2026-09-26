@@ -26,18 +26,31 @@ ENV/
 Thumbs.db
 
 # Jupyter
-.ipynb_checkpoints/
+.ipynb_checkups/
 *.ipynb_checkpoints
-ROTEIRO_VIDEO.md
 
-# Arquivos de roteiro do vídeo (material pessoal, não versionar)
+# ============================================================
+# BLOQUEIO PERMANENTE — arquivos pessoais que NÃO devem ir para o GitHub
+# ============================================================
+
+# Roteiros de vídeo (material pessoal)
 ROTEIRO_VIDEO.md
 ROTEIRO_VIDEO_AV1.pdf
 ROTEIRO_*.md
 ROTEIRO_*.pdf
 *_ROTEIRO_*
+roteiro_*.md
+roteiro_*.pdf
+roteiro_*.html
+roteiro_*.py
 
-# Screenshots/uploads feitos pelo usuário
+# Uploads feitos pelo usuário (prompts, screenshots, PDFs de referência)
 pasted_image_*.png
 upload/
+vi.pdf
 *.pdf.bak
+
+# Materiais externos de cursos (Introdução à Ciência de Dados etc.)
+*introducao*ciencia*dados*
+*introdução*ciência*dados*
+*intro_ciencia*

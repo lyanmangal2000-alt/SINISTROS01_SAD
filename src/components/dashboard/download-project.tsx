@@ -84,14 +84,14 @@ export function DownloadProject() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FolderDown className="h-5 w-5" />
-          Baixar arquivos do projeto
+          ARQUIVO 1 — Projeto limpo (para GitHub)
         </CardTitle>
         <CardDescription>
-          Baixe o projeto Python completo para rodar no VS Code. Como o gateway bloqueia
-          downloads estáticos, os arquivos são gerados no seu navegador (client-side) e
-          baixados diretamente para sua pasta de Downloads.
+          Projeto Python completo, limpo e pronto para publicação no GitHub. Não contém roteiros
+          de vídeo, prompts de upload, materiais externos ou arquivos pessoais.
           <br />
           <strong>{PROJETO_FILES.length} arquivos</strong> · {(PROJETO_TOTAL_SIZE / 1024).toFixed(1)} KB total
+          · 100% código + documentação técnica
         </CardDescription>
       </CardHeader>
       <CardContent>

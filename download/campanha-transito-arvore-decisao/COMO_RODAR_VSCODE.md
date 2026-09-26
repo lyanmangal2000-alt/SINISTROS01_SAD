@@ -19,7 +19,7 @@ Antes de começar, instale:
    - **Python** (Microsoft) — suporte a Python
    - **Pylance** (Microsoft) — autocomplete inteligente
    - **Jupyter** (Microsoft) — opcional, se quiser abrir células
-   - **Markdown All in One** — para editar o roteiro do vídeo
+   - **Markdown All in One** — para editar arquivos `.md` (relatório de campanhas, README, etc.)
 
 4. **Node.js 18+** (só se quiser rodar o dashboard Next.js) → https://nodejs.org/
 
@@ -49,7 +49,6 @@ campanha-transito-arvore-decisao/
 ├── .gitignore
 ├── README.md
 ├── RESULTADOS_ESPERADOS.md
-├── ROTEIRO_VIDEO.md           ← roteiro do vídeo
 ├── COMO_RODAR_VSCODE.md       ← este arquivo
 ├── requirements.txt
 ├── validar_leitura.py
@@ -207,7 +206,6 @@ O ZIP vem com `datatran2025.csv` sintético (apenas para teste do código). Para
 
 5. **Anote os números reais** que aparecem no final (acurácia, recall fatais, top atributos) e atualize:
    - `README.md` → seção "Resultados" (substitua os placeholders)
-   - `ROTEIRO_VIDEO.md` → substitua os `[XX]%`, `[YY]%` etc. pelos números reais
 
 ---
 
@@ -249,7 +247,6 @@ O ZIP vem com `datatran2025.csv` sintético (apenas para teste do código). Para
 - [ ] `python main.py` rodou sem erros e gerou os 3 PNGs + JSON + relatório
 - [ ] CSV real da PRF baixado e substituído (opcional, mas recomendado)
 - [ ] README.md atualizado com números reais
-- [ ] ROTEIRO_VIDEO.md com placeholders preenchidos
 - [ ] Repositório Git criado e pushed para o GitHub
 - [ ] Vídeo gravado (5-7 min)
 - [ ] Email enviado para lina@ls4business.com.br
