@@ -29,3 +29,15 @@ Thumbs.db
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 ROTEIRO_VIDEO.md
+
+# Arquivos de roteiro do vídeo (material pessoal, não versionar)
+ROTEIRO_VIDEO.md
+ROTEIRO_VIDEO_AV1.pdf
+ROTEIRO_*.md
+ROTEIRO_*.pdf
+*_ROTEIRO_*
+
+# Screenshots/uploads feitos pelo usuário
+pasted_image_*.png
+upload/
+*.pdf.bak
